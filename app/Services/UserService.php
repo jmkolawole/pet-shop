@@ -22,9 +22,13 @@ class UserService {
         }
         $send = [
             'id' => $user->id,
-            'name' => $user->name,
+            'uuid' => $user->uuid,
+            'first_name' => $user->first_name,
+            'last_name' => $user->last_name,
             'email' => $user->email,
+            'is_admin' => $user->is_admin
         ];
+        
         $result = $this->securityService->createPublicToken($send);
 
         return $result->original;

@@ -56,8 +56,11 @@ class SecurityService
             ->issuedAt($now)
             ->expiresAt($now->modify('1 hour'))
             ->withClaim('user_id', $user["id"])
-            ->withClaim('user_name', $user["name"])
-            ->withClaim('user_email', $user["email"])
+            ->withClaim('user_uuid', $user["uuid"])
+            ->withClaim('first_name', $user["first_name"])
+            ->withClaim('last_name', $user["last_name"])
+            ->withClaim('email', $user["email"])
+            ->withClaim('is_admin', $user["is_admin"])
             ->getToken($config->signer(), $config->signingKey());
         $token = $token->toString();
         return response()->json(['token' => $token]);
@@ -71,8 +74,11 @@ class SecurityService
         assert($token instanceof UnencryptedToken);
         $user = [
             'id' => $token->claims()->get('user_id'),
-            'name' => $token->claims()->get('user_name'),
-            'email' => $token->claims()->get('user_email')
+            'uuid' => $token->claims()->get('user_uuid'),
+            'first_name' => $token->claims()->get('first_name'),
+            'last_name' => $token->claims()->get('last_name'),
+            'email' => $token->claims()->get('email'),
+            'is_admin' => $token->claims()->get('is_admin')
         ];
         return $user;
     }

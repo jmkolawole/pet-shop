@@ -24,7 +24,14 @@ Route::prefix('v1')->group(function () {
     Route::post('/login', [LoginController::class, 'login']);
     
     Route::middleware(['check-request-token'])->group(function () {
+
         Route::get('/products', [ProductController::class, 'index']);
+
+
+        Route::group(['as' => 'admin.', 'prefix' => 'admin'], function () {
+            Route::get('/products', [ProductController::class, 'index']);
+        });
+
     });
 
     //Products
