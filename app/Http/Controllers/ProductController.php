@@ -4,19 +4,44 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
+use App\Interfaces\ProductRepositoryInterface;
 use App\Models\Product;
+use App\Traits\SendsApiResponse;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
+    use SendsApiResponse;
+    private ProductRepositoryInterface $productRepository;
+
+    public function __construct(ProductRepositoryInterface $productRepository)
+    {
+        $this->productRepository = $productRepository;
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request): JsonResponse
     {
-        //
+        return $this->successResponse($this->productRepository->getAllProducts());        
     }
+
+    
+
+    /* 
+    
+
+    public function index(): JsonResponse 
+    {
+        return response()->json([
+            'data' => $this->orderRepository->getAllOrders()
+        ]);
+    }
+    */
 
     /**
      * Show the form for creating a new resource.
