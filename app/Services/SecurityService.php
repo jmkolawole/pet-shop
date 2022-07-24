@@ -40,7 +40,7 @@ class SecurityService
 
     public function setExpiredAt()
     {
-       $this->expires_at = $this->issued_at->modify('1 hour');
+       $this->expires_at = $this->issued_at->modify('2 hours');
        return true;
     }
 

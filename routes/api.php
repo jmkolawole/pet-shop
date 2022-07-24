@@ -37,14 +37,15 @@ Route::prefix('v1')->group(function () {
         Route::get('/products', [ProductController::class, 'index']);
 
 
-        Route::post('/logout', [UserController::class, 'userLogout']);
+        Route::get('/logout', [UserController::class, 'userLogout']);
 
 
         Route::group(['as' => 'admin.', 'prefix' => 'admin'], function () {
-            Route::get('/products', [ProductController::class, 'index']);
-
-
-            Route::post('/logout', [AdminController::class, 'adminLogout']);
+            
+            Route::get('/user-listing', [AdminController::class, 'userListing']);
+            Route::put('/user-edit/{uuid}', [AdminController::class, 'userEdit']);
+            Route::delete('/user-delete/{uuid}', [AdminController::class, 'userDelete']);
+            Route::get('/logout', [AdminController::class, 'adminLogout']);
         });
 
     });
