@@ -25,7 +25,7 @@ return new class extends Migration
             $table->uuid('avatar')->nullable();
             $table->string('address');
             $table->string('phone_number');
-            $table->string('is_marketing');
+            $table->boolean('is_marketing')->default(0);
             $table->timestamps();
             $table->timestamp('last_login_at')->nullable();
         });

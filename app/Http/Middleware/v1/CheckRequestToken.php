@@ -2,8 +2,7 @@
 
 namespace App\Http\Middleware\v1;
 
-
-
+use App\Models\JwtToken;
 use App\Services\SecurityService;
 use Closure;
 use DateTimeImmutable;
@@ -25,19 +24,46 @@ class CheckRequestToken
     }
 
     public function handle(Request $request, Closure $next)
-    {
+    {   
+        //Check if user supplied token
         $token = $this->checkForToken($request);
 
+        //Add token to request opbject
         $request->request->add(['token' => $token]);
 
-        
+        //Check if token has expired
         if (!$this->securityService->checkToken($request)) {
             return response()->json(['error' => 'Token expired'], 401);
         }
 
+        //If token is still valid, check if it has been revoked i.e via the user logging out
+        $this->checkIfTokenHasBeenRevoked($token);
+
+        //Checks if token has admin access
         $this->checkAdminAccess($request);
 
         return $next($request);
+    }
+
+    public function checkIfTokenHasBeenRevoked($token)
+    {
+        //If token exist in the DB, then the user did not logout
+        $jwt = JwtToken::where('unique_id',$token)->first();
+        
+        if(!$jwt){
+            throw new \Exception('Permission denied. You have been logged out, please Login again', Response::HTTP_FORBIDDEN);
+        }
+
+        $this->updateLastTokenUsageTime($jwt);
+        return;
+
+    }
+
+    public function updateLastTokenUsageTime($jwt) : void
+    {
+        $jwt->last_used_at = new DateTimeImmutable();
+        $jwt->save();
+        return;
     }
 
     /**

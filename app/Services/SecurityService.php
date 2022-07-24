@@ -2,8 +2,11 @@
 
 namespace App\Services;
 
+use App\Models\JwtToken;
 use DateTimeImmutable;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Signer;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
@@ -13,10 +16,38 @@ use Lcobucci\JWT\Signer\Rsa\Sha512;
 
 class SecurityService
 {
+    private $expires_at;
+    private $issued_at;
+    
+
+
+    public function getExpiredAt()
+    {
+        return $this->expires_at;
+    }
+
+    public function getIssuedAt()
+    {
+        return $this->issued_at;
+    }
+
+    public function setIssuedAt()
+    {
+        $now = new DateTimeImmutable();
+        $this->issued_at = $now;
+        return true;
+    }
+
+    public function setExpiredAt()
+    {
+       $this->expires_at = $this->issued_at->modify('1 hour');
+       return true;
+    }
+
+    
 
     public function checkToken(Request $request)
     {
-        
         $config = $this->privateKey();
         $token = $request->token;
         $token = $config->parser()->parse($token);
@@ -49,12 +80,13 @@ class SecurityService
 
 
     public function createPublicToken($user)
-    {
+    {  
+        $this->setIssuedAt();
+        $this->setExpiredAt();
         $config = $this->privateKey();
-        $now = new DateTimeImmutable();
         $token = $config->builder()
-            ->issuedAt($now)
-            ->expiresAt($now->modify('1 hour'))
+            ->issuedAt($this->issued_at)
+            ->expiresAt($this->expires_at)
             ->withClaim('user_id', $user["id"])
             ->withClaim('user_uuid', $user["uuid"])
             ->withClaim('first_name', $user["first_name"])
@@ -63,8 +95,36 @@ class SecurityService
             ->withClaim('is_admin', $user["is_admin"])
             ->getToken($config->signer(), $config->signingKey());
         $token = $token->toString();
+        $this->logTokenDetails($user,$token);
         return response()->json(['token' => $token]);
     }
+
+
+    public function logTokenDetails($data,$token)
+    {
+       try {
+        DB::beginTransaction();
+        //Anytime a user wants to login, first invalidate the previous token
+        JwtToken::where('user_id',$data['id'])->delete();
+
+        //Log the new details
+        JwtToken::create([
+            'user_id' => $data['id'],
+            'unique_id' => $token,
+            'token_title' => $data['email'],
+            'expires_at' => $this->expires_at
+          ]);
+    
+        DB::commit();
+        return;
+    } catch (\Exception $e) {
+       throw $e;    
+    } 
+       
+
+       return true;
+    }
+
 
     
     public function extract_info($token)
