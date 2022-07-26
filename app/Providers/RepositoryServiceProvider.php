@@ -6,12 +6,14 @@ use Illuminate\Support\ServiceProvider;
 
 use App\Repositories\{
 ProductRepository,
-UserRepository
+UserRepository,
+CategoryRepository
 };
 
 use App\Interfaces\{
 ProductRepositoryInterface,
-UserRepositoryInterface
+UserRepositoryInterface,
+CategoryRepositoryInterface
 };
 
 
@@ -26,8 +28,9 @@ class RepositoryServiceProvider extends ServiceProvider
     public function register()
     {
         //
-        $this->app->bind(ProductRepositoryInterface::class, ProductRepository::class);
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
+        $this->app->bind(CategoryRepositoryInterface::class, CategoryRepository::class);
+        $this->app->bind(ProductRepositoryInterface::class, ProductRepository::class);
     }
     
 

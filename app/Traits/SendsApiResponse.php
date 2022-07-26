@@ -42,13 +42,14 @@ trait SendsApiResponse
      * @param string $message
      * @return \Illuminate\Http\JsonResponse
      */
-    public function createdResponse(string $message = null)
+    public function createdResponse($data = [], string $message = null)
     {
         $code = 201;
 
         return response()->json([
             'status' => $code,
-            'message' => $message ?? 'Created Successfully'
+            'message' => $message ?? 'Created Successfully',
+            'data' => $data
         ], $code);
     }
 
