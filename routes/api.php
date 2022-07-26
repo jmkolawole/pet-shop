@@ -25,9 +25,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::prefix('v1')->group(function () {
     
     //User unprotected routes
-    Route::post('/login', [UserController::class, 'userLogin']);
-    Route::post('/create', [UserController::class, 'createUser']);
-    
+    Route::post('/user/login', [UserController::class, 'userLogin']);
+    Route::post('/user/create', [UserController::class, 'createUser']);
+    Route::post('/user/forgot-password', [UserController::class, 'forgotPassword']);
+    Route::post('/user/reset-password-token', [UserController::class, 'resetPassword']);
+
     //Admin unprotected routes
     Route::post('admin/login', [AdminController::class, 'adminLogin']);
     Route::post('admin/create', [AdminController::class, 'createAdmin']);
@@ -37,6 +39,10 @@ Route::prefix('v1')->group(function () {
         Route::get('/products', [ProductController::class, 'index']);
 
 
+        Route::get('/user', [UserController::class, 'userInfo']);
+        Route::delete('/user', [UserController::class, 'userDelete']);
+
+        
         Route::get('/logout', [UserController::class, 'userLogout']);
 
 

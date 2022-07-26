@@ -2,6 +2,7 @@
 
 use App\Models\User;
 use Illuminate\Http\Response;
+use Illuminate\Support\Str;
 
 function probeForRole($email, $role)
 {
@@ -37,4 +38,16 @@ function probeForRole($email, $role)
     }
 
     
+}
+
+
+function getRandomString()  : string
+{
+    $token = Str::random(60);
+    return $token;
+}
+
+function sendEmail($email,$token)
+{
+
 }
