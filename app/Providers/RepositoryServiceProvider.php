@@ -7,13 +7,15 @@ use Illuminate\Support\ServiceProvider;
 use App\Repositories\{
 ProductRepository,
 UserRepository,
-CategoryRepository
+CategoryRepository,
+BrandRepository
 };
 
 use App\Interfaces\{
 ProductRepositoryInterface,
 UserRepositoryInterface,
-CategoryRepositoryInterface
+CategoryRepositoryInterface,
+BrandRepositoryInterface
 };
 
 
@@ -30,6 +32,7 @@ class RepositoryServiceProvider extends ServiceProvider
         //
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
         $this->app->bind(CategoryRepositoryInterface::class, CategoryRepository::class);
+        $this->app->bind(BrandRepositoryInterface::class, BrandRepository::class);
         $this->app->bind(ProductRepositoryInterface::class, ProductRepository::class);
     }
     

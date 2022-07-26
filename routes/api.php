@@ -6,6 +6,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\v1\Auth\Admin\AdminController;
 use App\Http\Controllers\v1\Auth\User\UserController;
 use App\Http\Controllers\v1\CategoryController;
+use App\Http\Controllers\v1\BrandController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,6 +28,11 @@ Route::prefix('v1')->group(function () {
     //Categories
     Route::get('/categories', [CategoryController::class, 'index']);
     Route::get('/category/{uuid}', [CategoryController::class, 'showCategory']);
+
+    //Brands
+    Route::get('/brands', [BrandController::class, 'index']);
+    Route::get('/brand/{uuid}', [BrandController::class, 'showBrand']);
+
 
     //User unprotected routes
     Route::post('/user/login', [UserController::class, 'userLogin']);
@@ -51,12 +57,20 @@ Route::prefix('v1')->group(function () {
 
         Route::group(['as' => 'admin.'], function () {
             //Routes opened for only admins
+            
             //Catgories
             Route::prefix('category')->group(function () {
                 Route::post('/create', [CategoryController::class, 'createCategory']);
                 Route::put('/{uuid}', [CategoryController::class, 'editCategory']);
                 Route::delete('/{uuid}', [CategoryController::class, 'deleteCategory']);
-            });    
+            });
+            
+            //Catgories
+            Route::prefix('brand')->group(function () {
+                Route::post('/create', [BrandController::class, 'createBrand']);
+                Route::put('/{uuid}', [BrandController::class, 'editBrand']);
+                Route::delete('/{uuid}', [BrandController::class, 'deleteBrand']);
+            });
 
             Route::prefix('admin')->group(function () {
                 Route::get('/user-listing', [AdminController::class, 'userListing']);

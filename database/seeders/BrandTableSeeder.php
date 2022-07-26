@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class CategoryTableSeeder extends Seeder
+class BrandTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,6 +15,6 @@ class CategoryTableSeeder extends Seeder
     public function run()
     {
         //
-        \App\Models\Category::factory(3)->create();
+        \App\Models\Brand::factory(3)->create();
     }
 }

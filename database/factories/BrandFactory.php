@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Category>
  */
-class CategoryFactory extends Factory
+class BrandFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -16,7 +16,7 @@ class CategoryFactory extends Factory
      */
     public function definition()
     {
-        $title = fake()->unique()->randomElement(['Dog','Cat','Snake']);
+        $title = fake()->unique()->randomElement(['Blue Bufallo','Ainsworth','Freshpet']);
         $slug = Str::slug($title);
 
         return [
