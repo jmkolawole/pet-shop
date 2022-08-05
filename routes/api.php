@@ -7,6 +7,8 @@ use App\Http\Controllers\v1\Auth\Admin\AdminController;
 use App\Http\Controllers\v1\Auth\User\UserController;
 use App\Http\Controllers\v1\CategoryController;
 use App\Http\Controllers\v1\BrandController;
+use App\Http\Controllers\v1\OrderController;
+use App\Http\Controllers\v1\OrderStatusController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,29 +49,45 @@ Route::prefix('v1')->group(function () {
     Route::middleware(['check-request-token'])->group(function () {
         //Routes only opened for authenticated users
 
-        Route::get('/products', [ProductController::class, 'index']);
-        Route::get('/user', [UserController::class, 'userInfo']);
-        Route::delete('/user', [UserController::class, 'userDelete']);
+        Route::group(['as' => 'users.'], function () {
 
 
-        Route::get('/logout', [UserController::class, 'userLogout']);
+
+
+
+            Route::get('/products', [ProductController::class, 'index']);
+            Route::get('/user', [UserController::class, 'userInfo']);
+            Route::delete('/user', [UserController::class, 'userDelete']);
+
+
+            Route::get('/logout', [UserController::class, 'userLogout']);
+        });
 
 
         Route::group(['as' => 'admin.'], function () {
             //Routes opened for only admins
-            
-            //Catgories
+
+            //Categories
             Route::prefix('category')->group(function () {
                 Route::post('/create', [CategoryController::class, 'createCategory']);
                 Route::put('/{uuid}', [CategoryController::class, 'editCategory']);
                 Route::delete('/{uuid}', [CategoryController::class, 'deleteCategory']);
             });
-            
-            //Catgories
+
+            //Brands
             Route::prefix('brand')->group(function () {
                 Route::post('/create', [BrandController::class, 'createBrand']);
                 Route::put('/{uuid}', [BrandController::class, 'editBrand']);
                 Route::delete('/{uuid}', [BrandController::class, 'deleteBrand']);
+            });
+
+            //Order Status
+            Route::get('order-statuses', [OrderStatusController::class, 'orderStatuses']);
+            Route::prefix('order-status')->group(function () {
+                Route::post('/create', [OrderStatusController::class, 'createOrderStatus']);
+                Route::put('/{uuid}', [OrderStatusController::class, 'editOrderStatus']);
+                Route::get('/{uuid}', [OrderStatusController::class, 'getOrderStatus']);
+                Route::delete('/{uuid}', [OrderStatusController::class, 'deleteOrderStatus']);
             });
 
             Route::prefix('admin')->group(function () {

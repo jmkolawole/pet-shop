@@ -8,14 +8,16 @@ use App\Repositories\{
 ProductRepository,
 UserRepository,
 CategoryRepository,
-BrandRepository
+BrandRepository,
+OrderStatusRepository
 };
 
 use App\Interfaces\{
 ProductRepositoryInterface,
 UserRepositoryInterface,
 CategoryRepositoryInterface,
-BrandRepositoryInterface
+BrandRepositoryInterface,
+OrderStatusRepositoryInterface
 };
 
 
@@ -34,6 +36,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(CategoryRepositoryInterface::class, CategoryRepository::class);
         $this->app->bind(BrandRepositoryInterface::class, BrandRepository::class);
         $this->app->bind(ProductRepositoryInterface::class, ProductRepository::class);
+        $this->app->bind(OrderStatusRepositoryInterface::class, OrderStatusRepository::class);
     }
     
 
